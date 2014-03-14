@@ -13,8 +13,6 @@
 	canvas.after:
 		PopMatrix
 			
-			
-
 	canvas:
 		Color:
 			rgb: self.colors[self.number]
@@ -28,8 +26,8 @@
 		font_size: min(self.height, self.width) / 2.
 		color: rgb('#f9f6f2') if root.number >= 8 else rgb('#776e65')
 		bold: True
-		center: root.center
 		size: root.size
+		center: root.center
 
 
 BoxLayout:
