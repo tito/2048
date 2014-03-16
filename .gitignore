@@ -1,0 +1,4 @@
+.*.swp
+bin
+.buildozer
+game2048.ini

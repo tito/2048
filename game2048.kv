@@ -1,5 +1,30 @@
-#:kivy 1.7.0
+#:kivy 1.7.2
 #:import rgb kivy.utils.get_color_from_hex
+
+<BoxButton@ButtonBehavior+BoxLayout>:
+	source: ''
+	orientation: 'vertical'
+	padding: '8dp'
+	canvas.before:
+		Color:
+			rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
+		BorderImage:
+			pos: self.pos
+			size: self.size
+			source: 'data/round.png'
+
+	Image:
+		source: root.source
+
+<TextButton@Button>:
+	color: 1, 1, 1, 1
+	background_color: 0xbb / 255., 0xad / 255., 0xa0 / 255., 1.
+	background_normal: 'data/round.png'
+	background_down: 'data/round.png'
+	size_hint_y: None
+	height: '48dp'
+	font_size: '20dp'
+	bold: True
 
 <Number>:
 	canvas.before:
@@ -15,7 +40,7 @@
 			
 	canvas:
 		Color:
-			rgb: self.colors[self.number]
+			rgb: self.colors.get(self.number, self.colors.get(2))
 		BorderImage:
 			pos: self.pos
 			size: self.size
@@ -23,7 +48,7 @@
 
 	Label:
 		text: str(root.number)
-		font_size: min(self.height, self.width) / 2.
+		font_size: min(self.height, self.width) / 2.5
 		color: rgb('#f9f6f2') if root.number >= 8 else rgb('#776e65')
 		bold: True
 		size: root.size
@@ -43,6 +68,7 @@ BoxLayout:
 
 	BoxLayout:
 		spacing: '10dp'
+		padding: '5dp'
 		size_hint_y: .25
 
 		Label:
@@ -51,13 +77,12 @@ BoxLayout:
 			color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
 			bold: True
 
-		AnchorLayout:
+		BoxLayout:
+			orientation: 'vertical'
+			spacing: '10dp'
 
 			BoxLayout:
-				size_hint: None, None
-				size: '90dp', '70dp'
 				orientation: 'vertical'
-				padding: '8dp'
 				canvas.before:
 					Color:
 						rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
@@ -69,13 +94,29 @@ BoxLayout:
 				Label:
 					text: 'SCORE'
 					color: 0xee / 255., 0xe4 / 255., 0xda / 255., 1.
-					font_size: '15sp'
+					font_size: self.height / 1.5
 					size_hint_y: .5
 					bold: True
 				Label:
 					text: str(game.score)
-					font_size: '30sp'
+					font_size: self.height / 1.5
 					bold: True
+
+			BoxLayout:
+				id: scoring
+				spacing: '10dp'
+				BoxButton:
+					source: 'data/icon-leaderboard.png'
+					on_press: app.gs_show_leaderboard()
+				BoxButton:
+					source: 'data/icon-achievements.png'
+					on_press: app.gs_show_achievements()
+
+	Label:
+		text: 'Join the numbers and get to the 2048 tile!'
+		size_hint_y: .1
+		font_size: self.height / 3.
+		color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
 
 	AnchorLayout:
 		id: anchor
@@ -117,14 +158,87 @@ BoxLayout:
 				text: 'Game\nover!'
 				halign: 'center'
 
-			Button:
-				color: 1, 1, 1, 1
-				background_color: 0xbb / 255., 0xad / 255., 0xa0 / 255., 1.
-				background_normal: 'data/round.png'
-				background_down: 'data/round.png'
-				on_press: root.restart() if end.opacity == 1. else None
-				size_hint_y: None
-				height: '48dp'
+			TextButton:
 				text: 'Restart'
+				on_press: root.restart() if end.opacity == 1. else None
 				font_size: '20dp'
-				bold: True
+
+# still using 1.7.2 for android, and i want the title color
+# ModalView widget
+<-Popup>:
+    _container: container
+    canvas:
+        Color:
+            rgba: root.background_color[:3] + [root.background_color[-1] * self._anim_alpha]
+        Rectangle:
+            size: self._window.size if self._window else (0, 0)
+
+        Color:
+            rgb: 1, 1, 1
+        BorderImage:
+            source: root.background
+            border: root.border
+            pos: self.pos
+            size: self.size
+    GridLayout:
+        padding: 12
+        cols: 1
+        size_hint: None, None
+        pos: root.pos
+        size: root.size
+
+        Label:
+            text: root.title
+			color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+            size_hint_y: None
+            height: self.texture_size[1] + 16
+            text_size: self.width - 16, None
+            font_size: root.title_size
+
+        Widget:
+            size_hint_y: None
+            height: 4
+            canvas:
+                Color:
+                    rgba: root.separator_color
+                Rectangle:
+                    pos: self.x, self.y + root.separator_height / 2.
+                    size: self.width, root.separator_height
+
+        BoxLayout:
+            id: container
+
+
+<GooglePlayPopup>:
+	size_hint: None, None
+	title: 'Connect to Google Play'
+	size: '300dp', '300dp'
+	background: 'data/popup.png'
+	separate_color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+	title_size: '20sp'
+
+	BoxLayout:
+
+		orientation: 'vertical'
+		spacing: '10dp'
+		padding: '10dp'
+
+		Label:
+			font_size: '20sp'
+			color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+			bold: True
+			text: 'Do you want to connect to Google Play for the Leaderboard and Achievements ?'
+			text_size: self.width - dp(20), None
+			halign: 'center'
+
+		BoxLayout:
+			size_hint_y: None
+			height: '68dp'
+			spacing: '10dp'
+			TextButton:
+				text: 'No'
+				on_press: root.dismiss()
+
+			TextButton:
+				text: 'Yes'
+				on_press: app.activate_google_play(); root.dismiss()

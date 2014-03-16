@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-#source.exclude_dirs = tests, bin
+source.exclude_dirs = libs
 
 # (list) List of exclusions using pattern matching
 source.exclude_patterns = README.md,screenshot.png
@@ -52,13 +52,13 @@ fullscreen = 0
 #
 
 # (list) Permissions
-#android.permissions = INTERNET
+android.permissions = INTERNET
 
 # (int) Android API to use
 #android.api = 14
 
 # (int) Minimum API required (8 = Android 2.2 devices)
-#android.minapi = 8
+android.minapi = 10
 
 # (int) Android SDK version to use
 #android.sdk = 21
@@ -85,11 +85,11 @@ fullscreen = 0
 # their classes. Don't add jars that you do not need, since extra jars can slow
 # down the build process. Allows wildcards matching, for example:
 # OUYA-ODK/libs/*.jar
-#android.add_jars = foo.jar,bar.jar,path/to/more/*.jar
+android.add_jars = libs/*.jar
 
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
-#android.add_src =
+android.add_src = libs/basegameutils/java/
 
 # (str) python-for-android branch to use, if not master, useful to try
 # not yet merged features.
@@ -114,10 +114,12 @@ fullscreen = 0
 
 # (list) Android application meta-data to set (key=value format)
 #android.meta_data =
+#[app:android.meta_data]
+#com.google.android.gms.version = @integer/google_play_services_version
 
 # (list) Android library project to add (will be added in the
 # project.properties automatically.)
-#android.library_references =
+android.library_references = libs/google-play-services_lib
 
 #
 # iOS specific
@@ -174,3 +176,8 @@ log_level = 1
 # Then, invoke the command line with the "demo" profile:
 #
 #     buildozer --profile demo android debug
+
+[app:android.meta_data]
+com.google.android.gms.version = @integer/google_play_services_version
+com.google.android.gms.games.APP_ID = @string/app_id
+com.google.android.gms.appstate.APP_ID = @string/app_id
