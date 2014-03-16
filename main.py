@@ -28,6 +28,7 @@ if platform == 'android':
     achievement_block_512 = 'CgkI0InGg4IYEAIQAw'
     achievement_block_1024 = 'CgkI0InGg4IYEAIQBA'
     achievement_block_2048 = 'CgkI0InGg4IYEAIQBQ'
+    achievement_block_4096 = 'CgkI0InGg4IYEAIQEg'
     achievement_100x_block_512 = 'CgkI0InGg4IYEAIQDA'
     achievement_1000x_block_512 = 'CgkI0InGg4IYEAIQDQ'
     achievement_100x_block_1024 = 'CgkI0InGg4IYEAIQDg'
@@ -40,7 +41,8 @@ if platform == 'android':
         256: achievement_block_256,
         512: achievement_block_512,
         1024: achievement_block_1024, 
-        2048: achievement_block_2048  }
+        2048: achievement_block_2048,
+        4096: achievement_block_4096}
 
     from kivy.uix.popup import Popup
     class GooglePlayPopup(Popup):
@@ -187,6 +189,10 @@ class Game2048(Widget):
             self.move_leftright(False)
         elif key == 275:
             self.move_leftright(True)
+        elif key == 27:
+            if platform == 'android':
+                # on android, don't leave the app!
+                return True
 
     def rebuild_background(self):
         self.canvas.before.clear()
