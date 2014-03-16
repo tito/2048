@@ -21,6 +21,7 @@ class GameHelperListener(PythonJavaClass):
         print 'signin success :)'
 
 gh_instance = None
+gh_instance_listener = None
 
 def _on_activity_result(request, response, data):
     gh_instance.onActivityResult(request, response, data)
@@ -28,10 +29,11 @@ def _on_activity_result(request, response, data):
 @run_on_ui_thread
 def setup(app):
     global gh_instance
+    global gh_instance_listener
 
 
     gh_instance = GameHelper(PythonActivity.mActivity, GameHelper.CLIENT_ALL)
-    gh_instance.enableDebugLog(True)
+    #gh_instance.enableDebugLog(True)
     gh_instance_listener = GameHelperListener()
     gh_instance.setup(gh_instance_listener)
     gh_instance.onStart(PythonActivity.mActivity)
