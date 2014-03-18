@@ -180,6 +180,7 @@ class Game2048(Widget):
 
         # bind keyboard
         Window.bind(on_key_down=self.on_key_down)
+        Window.on_keyboard = lambda *x: None
 
         self.restart()
 
@@ -408,6 +409,8 @@ class Game2048(Widget):
 
 
 class Game2048App(App):
+    use_kivy_settings = False
+
     def build_config(self, config):
         if platform == 'android':
             config.setdefaults('play', {'use_google_play': '0'})
@@ -471,6 +474,9 @@ class Game2048App(App):
     def on_resume(self):
         if platform == 'android':
             gs_android.on_start()
+
+    def _on_keyboard_settings(self, *args):
+        return
 
 if __name__ == '__main__':
     Factory.register('ButtonBehavior', cls=ButtonBehavior)
