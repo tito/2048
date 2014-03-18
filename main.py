@@ -122,7 +122,9 @@ class Number(Widget):
         256: get_color_from_hex('#edcc61'),
         512: get_color_from_hex('#edc850'),
         1024: get_color_from_hex('#edc53f'),
-        2048: get_color_from_hex('#edc22e')}
+        2048: get_color_from_hex('#edc22e'),
+        4096: get_color_from_hex('#ed702e'),
+        8192: get_color_from_hex('#ed4c2e')}
 
     def __init__(self, **kwargs):
         super(Number, self).__init__(**kwargs)
@@ -149,16 +151,17 @@ class Number(Widget):
         Animation(pos=pos, d=.1, t='out_quad').start(self)
 
     def on_number(self, instance, value):
-        if value in achievements:
-            app.gs_unlock(achievements[value])
-        if value == 512:
-            app.gs_increment(achievement_100x_block_512)
-            app.gs_increment(achievement_1000x_block_512)
-        elif value == 1024:
-            app.gs_increment(achievement_100x_block_1024)
-            app.gs_increment(achievement_1000x_block_1024)
-        elif value == 2048:
-            app.gs_increment(achievement_10x_block_2048)
+        if platform == 'android':
+            if value in achievements:
+                app.gs_unlock(achievements[value])
+            if value == 512:
+                app.gs_increment(achievement_100x_block_512)
+                app.gs_increment(achievement_1000x_block_512)
+            elif value == 1024:
+                app.gs_increment(achievement_100x_block_1024)
+                app.gs_increment(achievement_1000x_block_1024)
+            elif value == 2048:
+                app.gs_increment(achievement_10x_block_2048)
 
 
 class Game2048(Widget):
