@@ -1,4 +1,4 @@
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -193,10 +193,12 @@ class Game2048(Widget):
             self.move_leftright(False)
         elif key == 275:
             self.move_leftright(True)
-        elif key == 27:
-            if platform == 'android':
-                # on android, don't leave the app!
-                return True
+        elif key == 27 and platform == 'android':
+            from jnius import autoclass
+            PythonActivity = autoclass('org.renpy.android.PythonActivity')
+            PythonActivity.mActivity.moveTaskToBack(True)
+            return True
+
 
     def rebuild_background(self):
         self.canvas.before.clear()
