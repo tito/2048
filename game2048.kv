@@ -58,7 +58,7 @@
 BoxLayout:
 	padding: '10dp'
 	spacing: '10dp'
-	orientation: 'vertical'
+	orientation: 'vertical' if self.height > self.width else 'horizontal'
 	canvas:
 		Color:
 			rgb: 0xfa / 255., 0xf8 / 255., 0xef / 255.
@@ -67,56 +67,54 @@ BoxLayout:
 			size: self.size
 
 	BoxLayout:
-		spacing: '10dp'
-		padding: '5dp'
-		size_hint_y: .25
-
-		Label:
-			text: '2048'
-			font_size: min(self.height, self.width) / 2.
-			color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
-			bold: True
+		orientation: 'vertical' if root.height > root.width else 'horizontal'
+		size_hint_y: .25 if root.height > root.width else 1
 
 		BoxLayout:
-			orientation: 'vertical'
 			spacing: '10dp'
+			padding: '5dp'
+			orientation: 'vertical' if root.height < root.width else 'horizontal'
+
+			Label:
+				text: '2048'
+				font_size: min(self.height, self.width) / 2.
+				color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+				bold: True
 
 			BoxLayout:
 				orientation: 'vertical'
-				canvas.before:
-					Color:
-						rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
-					BorderImage:
-						pos: self.pos
-						size: self.size
-						source: 'data/round.png'
-
-				Label:
-					text: 'SCORE'
-					color: 0xee / 255., 0xe4 / 255., 0xda / 255., 1.
-					font_size: self.height / 1.5
-					size_hint_y: .5
-					bold: True
-				Label:
-					text: str(game.score)
-					font_size: self.height / 1.5
-					bold: True
-
-			BoxLayout:
-				id: scoring
 				spacing: '10dp'
-				BoxButton:
-					source: 'data/icon-leaderboard.png'
-					on_press: app.gs_show_leaderboard()
-				BoxButton:
-					source: 'data/icon-achievements.png'
-					on_press: app.gs_show_achievements()
 
-	Label:
-		text: 'Join the numbers and get to the 2048 tile!'
-		size_hint_y: .1
-		font_size: self.height / 3.
-		color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+				BoxLayout:
+					orientation: 'vertical'
+					canvas.before:
+						Color:
+							rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
+						BorderImage:
+							pos: self.pos
+							size: self.size
+							source: 'data/round.png'
+
+					Label:
+						text: 'SCORE'
+						color: 0xee / 255., 0xe4 / 255., 0xda / 255., 1.
+						font_size: self.height / 1.5
+						size_hint_y: .5
+						bold: True
+					Label:
+						text: str(game.score)
+						font_size: self.height / 1.5
+						bold: True
+
+				BoxLayout:
+					id: scoring
+					spacing: '10dp'
+					BoxButton:
+						source: 'data/icon-leaderboard.png'
+						on_press: app.gs_show_leaderboard()
+					BoxButton:
+						source: 'data/icon-achievements.png'
+						on_press: app.gs_show_achievements()
 
 	AnchorLayout:
 		id: anchor

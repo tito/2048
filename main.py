@@ -1,4 +1,4 @@
-__version__ = '1.2.1'
+__version__ = '1.3.0'
 
 from kivy.app import App
 from kivy.uix.widget import Widget
