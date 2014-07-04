@@ -186,18 +186,20 @@ class Game2048(Widget):
 
     def on_key_down(self, window, key, *args):
         if key == 273:
-            self.move_topdown(True)
+            moved = self.move_topdown(True)
         elif key == 274:
-            self.move_topdown(False)
+            moved = self.move_topdown(False)
         elif key == 276:
-            self.move_leftright(False)
+            moved = self.move_leftright(False)
         elif key == 275:
-            self.move_leftright(True)
+            moved = self.move_leftright(True)
         elif key == 27 and platform == 'android':
             from jnius import autoclass
             PythonActivity = autoclass('org.renpy.android.PythonActivity')
             PythonActivity.mActivity.moveTaskToBack(True)
             return True
+        if not self.check_end() and moved:
+            Clock.schedule_once(self.spawn_number, .20)
 
 
     def rebuild_background(self):
@@ -305,9 +307,7 @@ class Game2048(Widget):
                 pos = self.index_to_pos(ix, iy)
                 if cube.pos != pos:
                     cube.move_to(pos)
-
-        if not self.check_end() and moved:
-            Clock.schedule_once(self.spawn_number, .20)
+        return moved
 
     def move_topdown(self, top):
         r = range(3, -1, -1) if top else range(4)
@@ -336,9 +336,7 @@ class Game2048(Widget):
                 pos = self.index_to_pos(ix, iy)
                 if cube.pos != pos:
                     cube.move_to(pos)
-
-        if not self.check_end() and moved:
-            Clock.schedule_once(self.spawn_number, .20)
+        return moved
 
     def combine(self, cubes):
         if len(cubes) <= 1:
