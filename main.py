@@ -1,4 +1,4 @@
-__version__ = '1.3.1'
+__version__ = '1.3.2'
 
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -185,6 +185,7 @@ class Game2048(Widget):
         self.restart()
 
     def on_key_down(self, window, key, *args):
+        moved = False
         if key == 273:
             moved = self.move_topdown(True, from_keyboard=True)
         elif key == 274:
