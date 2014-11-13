@@ -186,13 +186,13 @@ class Game2048(Widget):
 
     def on_key_down(self, window, key, *args):
         if key == 273:
-            moved = self.move_topdown(True)
+            moved = self.move_topdown(True, from_keyboard=True)
         elif key == 274:
-            moved = self.move_topdown(False)
+            moved = self.move_topdown(False, from_keyboard=True)
         elif key == 276:
-            moved = self.move_leftright(False)
+            moved = self.move_leftright(False, from_keyboard=True)
         elif key == 275:
-            moved = self.move_leftright(True)
+            moved = self.move_leftright(True, from_keyboard=True)
         elif key == 27 and platform == 'android':
             from jnius import autoclass
             PythonActivity = autoclass('org.renpy.android.PythonActivity')
@@ -280,7 +280,7 @@ class Game2048(Widget):
             self.move_topdown(dy > 0)
         return True
 
-    def move_leftright(self, right):
+    def move_leftright(self, right, from_keyboard=False):
         r = range(3, -1, -1) if right else range(4)
         grid = self.grid
         moved = False
@@ -307,9 +307,13 @@ class Game2048(Widget):
                 pos = self.index_to_pos(ix, iy)
                 if cube.pos != pos:
                     cube.move_to(pos)
-        return moved
 
-    def move_topdown(self, top):
+        if from_keyboard:
+            return moved
+        elif not self.check_end() and moved:
+            Clock.schedule_once(self.spawn_number, .20)
+
+    def move_topdown(self, top, from_keyboard=False):
         r = range(3, -1, -1) if top else range(4)
         grid = self.grid
         moved = False
@@ -336,7 +340,11 @@ class Game2048(Widget):
                 pos = self.index_to_pos(ix, iy)
                 if cube.pos != pos:
                     cube.move_to(pos)
-        return moved
+
+        if from_keyboard:
+            return moved
+        elif not self.check_end() and moved:
+            Clock.schedule_once(self.spawn_number, .20)
 
     def combine(self, cubes):
         if len(cubes) <= 1:
